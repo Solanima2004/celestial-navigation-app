@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>天測計算アプリ</title>
+  
+  <!-- ↓ LeafletのCSSを追加 -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <h1>天測計算</h1>
+
+  <!-- ↓ 地図を表示するコンテナを追加 -->
+  <div id="map" style="height: 400px; margin-bottom: 20px; border-radius: 8px;"></div>
+
+  <form id="observation-form">
+    <!-- (formの中身は変更なしなので省略) -->
+    <fieldset>
+      <legend>観測情報の入力</legend>
+      <div>
+        <label for="world-time">世界時 (UTC):</label>
+        <input type="datetime-local" id="world-time" name="world-time" required>
+      </div>
+      <br>
+      <div>
+        <label for="latitude">概略の緯度:</label>
+        <input type="number" id="latitude" name="latitude" placeholder="例: 35.68" step="any" min="-90" max="90" required>
+      </div>
+      <br>
+      <div>
+        <label for="longitude">概略の経度:</label>
+        <input type="number" id="longitude" name="longitude" placeholder="例: 139.76" step="any" min="-180" max="180" required>
+      </div>
+      <br>
+      <div>
+        <label>観測高度 (Hs):</label>
+        <input type="number" id="altitude-deg" name="altitude-deg" placeholder="度" class="altitude-input" min="0" max="90" required>
+        <span>度</span>
+        <input type="number" id="altitude-min" name="altitude-min" placeholder="分" class="altitude-input" step="any" min="0" max="60" required>
+        <span>分</span>
+      </div>
+    </fieldset>
+
+    <fieldset style="margin-top: 20px;">
+      <legend>高度補正の入力</legend>
+      <div>
+        <label>器差 (IE):</label>
+        <select id="ie-sign">
+          <option value="1">+</option>
+          <option value="-1">-</option>
+        </select>
+        <input type="number" id="ie-deg" value="0" class="altitude-input" min="0" max="90" required>
+        <span>度</span>
+        <input type="number" id="ie-min" value="0" class="altitude-input" step="any" min="0" max="60" required>
+        <span>分</span>
+      </div>
+      <br>
+      <div>
+        <label for="eye-height">眼高 (HE):</label>
+        <input type="number" id="eye-height" value="10" step="any" required>
+        <span>メートル</span>
+      </div>
+      <br>
+      <div>
+        <label for="refraction">大気差 (R):</label>
+        <input type="number" id="refraction" value="0.9" step="any" required>
+        <span>分</span>
+      </div>
+      <br>
+      <div>
+        <label for="parallax">視差 (PA):</label>
+        <input type="number" id="parallax" value="0.1" step="any" required>
+        <span>分</span>
+      </div>
+    </fieldset>
+    
+    <div style="margin-top:20px;">
+      <button type="submit">計算実行</button>
+      <button type="button" id="reset-button">リセット</button>
+    </div>
+  </form>
+
+  <div id="results-area" style="margin-top: 20px;">
+    <!-- (計算結果の表示部分は変更なしなので省略) -->
+    <h2>計算結果</h2>
+    <p>GHA: <span id="gha-result">--.--</span></p>
+    <p>赤緯: <span id="declination-result">--.--</span></p>
+    <p>計算高度 (Hc): <span id="computed-altitude-result">--.--</span></p>
+    <p>方位角 (Zn): <span id="azimuth-result">--.--</span></p>
+    <hr>
+    <p>真高度 (Ho): <span id="true-altitude-result">--.--</span></p>
+    <p>修正差: <span id="correction-diff-result">--.--</span></p>
+  </div>
+
+  <!-- ↓ LeafletのJavaScript本体を追加 -->
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <!-- ↓ 新しく作る地図用のJavaScriptファイル -->
+  <script src="map.js"></script>
+  <!-- ↓ 既存の計算用JavaScriptファイル -->
+  <script src="app.js"></script>
+</body>
+</html>
+
